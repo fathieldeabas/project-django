@@ -1,0 +1,32 @@
+{% extends "./base.html" %}
+
+    {%block title%} all_item {%endblock%}
+    {%block content%}
+        <table border="1">
+            <tr>
+                <th>porject number</th>
+                <th> porject title</th>
+                <th> emp name</th>
+            </tr>
+            {% for p in data %}
+
+                {% block p %}
+                
+                    <tr>
+                        <td>{{p.p_number}}</td>
+                        <td>{{p.title}}</td>
+                        {% if p.emp_id.emp_name == false %}
+                            <td> null</td>
+                            <td> <form method="POST" action="{% url 'delete' p.id %}" >
+                                {% csrf_token %}<button type="submit" >delete</button> </form></a></td>
+                        {% else %}
+                            <td>{{p.emp_id.emp_name}}</td>
+                            <td> <form method="POST" action="{% url 'delete' p.id %}" >
+                                {% csrf_token %}<button type="submit" >delete</button> </form></a></td>
+                        {% endif %}
+                    </tr>
+                {% endblock %}
+            {% endfor %}
+        </table>
+    {%endblock%}
+
