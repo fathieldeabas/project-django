@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <title>{%block title%} default title {%endblock%}</title>
+    <link rel="stylesheet"  href="{%  static  'css/style.css'  %}">
+</head>
+<body > 
+    <div class="container">
+        {% if 'user' in request.session  %}
+        <ul class="navbar">
+            <li><a href={% url 'company'%}>home</a></li>
+            <li><a href={% url 'insert' %}>insert</a></li>
+            <li><a href={% url 'update' %}>updates</a></li>
+            <li><a href={% url 'logout' %}><button style="background:red">logout</button></a></li>
+        </ul>
+        {% endif %}
+    {%block content%} content{%endblock%}
+</div>
+</body>
+</html>

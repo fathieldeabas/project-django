@@ -7,8 +7,11 @@ from django.shortcuts import redirect
 from  .forma import forminsert,form_update
 
 from django.views.generic import ListView 
+from django.contrib.auth.decorators import login_required
+
 
 # Create your views here.
+
 def index(request):
     # car1=cars.objects.create(car_number=1)
     # car2=cars.objects.create(car_number=2)
@@ -30,31 +33,41 @@ def index(request):
     
     #     print(x.emp_id.emp_name)
     # print(Array[0][2].emp_name)
-    return render(request,'company/all.html',{'data':project.objects.all()})
-
+    if ('user' in request.session):
+        return render(request,'company/all.html',{'data':project.objects.all()})
+    else:
+        return redirect('/')
 
 def insert(request,):
-    forma=forminsert(request.POST)
-    if forma.is_valid():
-        project.objects.create(p_number=request.POST['project_number'], title=request.POST['title'],)   
-        print(request.POST['project_number'])
-    # car1=cars.objects.create(car_number=5000000)
-    # emp1=emp.objects.create(emp_name="fathi",emp_number=10000000,car_id=car1)
-    # project.objects.create(p_number=p_number, title=title,emp_id=emp1)
-    return render(request,'company/insert.html',{'forma':forma})
+    if ('user' in request.session):
+        forma=forminsert(request.POST)
+        if forma.is_valid():
+            project.objects.create(p_number=request.POST['project_number'], title=request.POST['title'],)   
+            print(request.POST['project_number'])
+        # car1=cars.objects.create(car_number=5000000)
+        # emp1=emp.objects.create(emp_name="fathi",emp_number=10000000,car_id=car1)
+        # project.objects.create(p_number=p_number, title=title,emp_id=emp1)
+        return render(request,'company/insert.html',{'forma':forma})
+    else:
+        return redirect('/')
+
 
 def delete(request,id):
-    project.objects.filter(id=id).delete()
-    return redirect('/company/')
-
-def update(request):
-    print(request.POST)
-    form_up=form_update(request.POST)
-    if form_up.is_valid():  
-        project.objects.filter(p_number= request.POST["project_number"]).update(title=request.POST["title"])
+    if ('user' in request.session):
+        project.objects.filter(id=id).delete()
         return redirect('/company/')
-    return render(request,'company/update.html',{'form_up':form_up})
-    
+    else:
+        return redirect('/')
+def update(request):
+    if ('user' in request.session):
+        print(request.POST)
+        form_up=form_update(request.POST)
+        if form_up.is_valid():  
+            project.objects.filter(p_number= request.POST["project_number"]).update(title=request.POST["title"])
+            return redirect('/company/',request)
+        return render(request,'company/update.html',{'form_up':form_up})
+    else:
+        return redirect('/')
     
 
 class listall(ListView):

@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.http import response
 from django.urls import path
 from company import views
+from user.views import  login, logout
 
 from django.conf.urls import url, include
 
@@ -31,5 +32,7 @@ urlpatterns = [
     path('update/',views.update,name="update"),
     path('listall',views.listall.as_view()),
     # url(r'^delete/(?P<p_number>[0-9]+)$',views.delete ,name="delete"),
-
+    path('',login,name="login" ),
+    path('logout',logout,name="logout" ),
+    
 ]
